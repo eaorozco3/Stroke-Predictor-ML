@@ -6,6 +6,7 @@ from sklearn.metrics import classification_report, roc_auc_score
 from sklearn.model_selection import train_test_split
 from dataset import clean_dataset, categorical_to_numerical
 from perceptron import regular_perceptron
+from random_forest import generate_rf
 
 if __name__ == "__main__":
     df = pd.read_csv('healthcare-dataset-stroke-data.csv')
@@ -29,3 +30,8 @@ if __name__ == "__main__":
     y_scaled_pred = scaled_perceptron.predict(x_test_scaled)
     print("\nScaled Perceptron Results:")
     print(classification_report(y_test, y_scaled_pred))
+
+    rf = generate_rf(X_train, y_train)
+    y_pred_rf = rf.predict(X_test)
+    print("\nRandom Forest Results:")
+    print(classification_report(y_test, y_pred_rf))    
