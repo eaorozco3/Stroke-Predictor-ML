@@ -15,4 +15,14 @@ def categorical_to_numerical(x):
         encoder = LabelEncoder()
         x[feature] = encoder.fit_transform(x[feature])
     
+    return x 
+
+def z_score_normalization(x):
+    numerical_columns = ["age", "avg_glucose_level", "bmi"]
+
+    for feature in numerical_columns:
+        mean = x[feature].mean()
+        std = x[feature].std()
+        x[feature] = (x[feature] - mean) / std
+    
     return x
