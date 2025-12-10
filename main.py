@@ -11,6 +11,7 @@ from xgboost_model import generate_xgboost
 from imblearn.over_sampling import SMOTE
 from sklearn.linear_model import LogisticRegression
 import matplotlib.pyplot as plt
+from plot_feature_importance_comparison import plot_feature_importance_comparison
 
 
 if __name__ == "__main__":
@@ -82,3 +83,29 @@ if __name__ == "__main__":
     plt.title("Model Comparison for Stroke Prediction")
     plt.ylabel("F1-score")
     plt.show()
+
+    feature_names = list(x_numerical.columns)
+
+    # Create models dictionary (only include models with feature importance)
+    models_dict = {
+        'Perceptron': r_perceptron,
+        'Scaled Perceptron': scaled_perceptron,
+        'Random Forest': rf,
+        'XGBoost': xgb
+    }
+
+    # Plot feature importance comparison
+    importance_df = plot_feature_importance_comparison(
+        models_dict=models_dict,
+        X_train=X_train,
+        y_train=y_train,
+        X_test=X_test,
+        y_test=y_test,
+        feature_names=feature_names
+    )
+
+    # Print top features
+    print("\n" + "="*60)
+    print("TOP FEATURES BY AVERAGE IMPORTANCE:")
+    print("="*60)
+    print(importance_df.nlargest(10, 'Average')[['Average']])
