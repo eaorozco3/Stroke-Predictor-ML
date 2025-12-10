@@ -7,6 +7,7 @@ from dataset import clean_dataset, categorical_to_numerical, z_score_normalizati
 from perceptron import regular_perceptron
 from random_forest import generate_rf
 from graphsage_model import generate_graphsage_embeddings
+from xgboost_model import generate_xgboost
 from imblearn.over_sampling import SMOTE
 from sklearn.linear_model import LogisticRegression
 import matplotlib.pyplot as plt
@@ -63,11 +64,18 @@ if __name__ == "__main__":
 
     f1_sage = f1_score(y_test, y_pred_sage)
 
+    print("\nGenerating XGBoost...")
+    xgb = generate_xgboost(X_train, y_train)
+    y_pred_xgb = xgb.predict(X_test)
+    print("\nXGBoost Results:")
+    print(classification_report(y_test, y_pred_xgb))
+    f1_xgb = f1_score(y_test, y_pred_xgb)
+
     # --------------------------------------------------------
     # Comparison Chart
     # --------------------------------------------------------
-    models = ["Perceptron", "Scaled Perceptron", "Random Forest", "GraphSAGE"]
-    scores = [f1_perceptron, f1_scaled, f1_rf, f1_sage]
+    models = ["Perceptron", "Scaled Perceptron", "Random Forest", "GraphSAGE", "XGBoost"]
+    scores = [f1_perceptron, f1_scaled, f1_rf, f1_sage, f1_xgb]
 
     plt.figure(figsize=(10, 5))
     plt.bar(models, scores)
