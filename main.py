@@ -35,6 +35,7 @@ if __name__ == "__main__":
     print("\nRegular Perceptron Results:")
     print(classification_report(y_test, y_pred))
     f1_perceptron_positive = f1_score(y_test, y_pred, pos_label=1)
+    f1_perceptron_negative = f1_score(y_test, y_pred, pos_label=0)
 
 
     scaler = StandardScaler()
@@ -45,12 +46,14 @@ if __name__ == "__main__":
     print("\nScaled Perceptron Results:")
     print(classification_report(y_test, y_scaled_pred))
     f1_scaled_positive = f1_score(y_test, y_scaled_pred, pos_label=1)
+    f1_scaled_negative = f1_score(y_test, y_scaled_pred, pos_label=0)
 
     rf = generate_rf(X_train, y_train)
     y_pred_rf = rf.predict(X_test)
     print("\nRandom Forest Results:")
     print(classification_report(y_test, y_pred_rf))
-    f1_rf_positive = f1_score(y_test, y_pred_rf, pos_label=1)    
+    f1_rf_positive = f1_score(y_test, y_pred_rf, pos_label=1)
+    f1_rf_negative = f1_score(y_test, y_pred_rf, pos_label=1)    
 
     print("\nGenerating GraphSAGE embeddings...")
 
@@ -65,6 +68,7 @@ if __name__ == "__main__":
     print(classification_report(y_test, y_pred_sage))
 
     f1_sage_positive = f1_score(y_test, y_pred_sage, pos_label=1)
+    f1_sage_negative = f1_score(y_test, y_pred_sage, pos_label=0)
 
     print("\nGenerating XGBoost...")
     xgb = generate_xgboost(X_train, y_train)
@@ -72,15 +76,17 @@ if __name__ == "__main__":
     print("\nXGBoost Results:")
     print(classification_report(y_test, y_pred_xgb))
     f1_xgb_positive = f1_score(y_test, y_pred_xgb, pos_label=1)
+    f1_xgb_negative = f1_score(y_test, y_pred_xgb, pos_label=0)
 
     # --------------------------------------------------------
     # Comparison Chart
     # --------------------------------------------------------
     models = ["Perceptron", "Scaled Perceptron", "Random Forest", "GraphSAGE", "XGBoost"]
-    scores = [f1_perceptron_positive, f1_scaled_positive, f1_rf_positive, f1_sage_positive, f1_xgb_positive]
+    scores_positive = [f1_perceptron_positive, f1_scaled_positive, f1_rf_positive, f1_sage_positive, f1_xgb_positive]
+    scores_negative = [f1_perceptron_negative, f1_scaled_negative, f1_rf_negative, f1_sage_negative, f1_xgb_negative]
 
     plt.figure(figsize=(10, 5))
-    plt.bar(models, scores)
+    plt.bar(models, scores_positive)
     plt.title("Model Comparison for Stroke Prediction")
     plt.ylabel("F1-score")
     plt.show()
