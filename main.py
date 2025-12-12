@@ -25,7 +25,8 @@ if __name__ == "__main__":
     x_numerical = categorical_to_numerical(x.copy())
 
     X_train, X_test, y_train, y_test = train_test_split(x_numerical, y, test_size=0.2, random_state=42, stratify=y)
-    smote = SMOTE(random_state=42)
+    #smote = SMOTE(random_state=42)
+    smote = SMOTE(sampling_strategy=0.2, random_state=42)  # 5:1 ratio instead of 1:1
     X_train, y_train = smote.fit_resample(X_train, y_train)
 
 
@@ -33,7 +34,7 @@ if __name__ == "__main__":
     y_pred = r_perceptron.predict(X_test)
     print("\nRegular Perceptron Results:")
     print(classification_report(y_test, y_pred))
-    f1_perceptron = f1_score(y_test, y_pred)
+    f1_perceptron_positive = f1_score(y_test, y_pred, pos_label=1)
 
 
     scaler = StandardScaler()
@@ -43,13 +44,13 @@ if __name__ == "__main__":
     y_scaled_pred = scaled_perceptron.predict(x_test_scaled)
     print("\nScaled Perceptron Results:")
     print(classification_report(y_test, y_scaled_pred))
-    f1_scaled = f1_score(y_test, y_scaled_pred)
+    f1_scaled_positive = f1_score(y_test, y_scaled_pred, pos_label=1)
 
     rf = generate_rf(X_train, y_train)
     y_pred_rf = rf.predict(X_test)
     print("\nRandom Forest Results:")
     print(classification_report(y_test, y_pred_rf))
-    f1_rf = f1_score(y_test, y_pred_rf)    
+    f1_rf_positive = f1_score(y_test, y_pred_rf, pos_label=1)    
 
     print("\nGenerating GraphSAGE embeddings...")
 
@@ -63,20 +64,20 @@ if __name__ == "__main__":
     print("\nGraphSAGE + Logistic Regression Results:")
     print(classification_report(y_test, y_pred_sage))
 
-    f1_sage = f1_score(y_test, y_pred_sage)
+    f1_sage_positive = f1_score(y_test, y_pred_sage, pos_label=1)
 
     print("\nGenerating XGBoost...")
     xgb = generate_xgboost(X_train, y_train)
     y_pred_xgb = xgb.predict(X_test)
     print("\nXGBoost Results:")
     print(classification_report(y_test, y_pred_xgb))
-    f1_xgb = f1_score(y_test, y_pred_xgb)
+    f1_xgb_positive = f1_score(y_test, y_pred_xgb, pos_label=1)
 
     # --------------------------------------------------------
     # Comparison Chart
     # --------------------------------------------------------
     models = ["Perceptron", "Scaled Perceptron", "Random Forest", "GraphSAGE", "XGBoost"]
-    scores = [f1_perceptron, f1_scaled, f1_rf, f1_sage, f1_xgb]
+    scores = [f1_perceptron_positive, f1_scaled_positive, f1_rf_positive, f1_sage_positive, f1_xgb_positive]
 
     plt.figure(figsize=(10, 5))
     plt.bar(models, scores)
