@@ -87,7 +87,13 @@ if __name__ == "__main__":
 
     plt.figure(figsize=(10, 5))
     plt.bar(models, scores_positive)
-    plt.title("Model Comparison for Stroke Prediction")
+    plt.title("Model Comparison for Stroke Prediction (Stroke)")
+    plt.ylabel("F1-score")
+    plt.show()
+
+    plt.figure(figsize=(10, 5))
+    plt.bar(models, scores_negative)
+    plt.title("Model Comparison for Stroke Prediction (No Stroke)")
     plt.ylabel("F1-score")
     plt.show()
 
